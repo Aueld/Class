@@ -1,13 +1,13 @@
 #include <stdio.h>
 
 int factorial(int);
-int Fibobacci(int);
+void Fibobacci(int);
 
 int main()
 {
 	int num = 0;
 
-	printf("¼ýÀÚ ÀÔ·Â : ");
+	printf("Â¼Ã½Ã€Ãš Ã€Ã”Â·Ã‚ : ");
 
 	scanf_s("%d", &num);
 
@@ -28,7 +28,7 @@ int factorial(int n)
 	return n * factorial(n - 1);
 }
 
-int  Fibobacci(int n)
+void  Fibobacci(int n)
 {
 	
 	int f1 = 0, f2 = 1, f3 = 0;
