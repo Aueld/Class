@@ -1,0 +1,181 @@
+#include <stdio.h>
+
+void pointer_operation();
+void string_pointer();
+void pointer_arr_and_2d_arr();
+void pointer_and_const_arr();
+void void_pointer();
+
+int main()
+{
+	//pointer_operation();
+
+	//pointer_arr_and_2d_arr();
+
+	//pointer_and_const_arr();
+
+	void_pointer();
+
+	return 0;
+}
+
+void pointer_operation()
+{
+	int* ptr2 = 0x0010;
+	double* ptr3 = 0x0010;
+
+	printf("%p \n", ptr2 + 1);
+	printf("%p \n\n", ptr3 + 1);
+	
+	int arr[3] = {11, 22, 33};
+	int* ptr = arr;
+
+	printf("%d %d %d", *ptr, *(ptr + 1), *(ptr + 2));
+
+	double dArr[3];
+
+}
+
+void string_pointer()
+{
+	char str[] = "string";
+	str[0] = 'c';
+
+	printf("%s\n", str);
+
+	const char* pstr = "PtrString";
+
+}
+
+void pointer_arr_and_2d_arr()
+{
+	float arr[2][4] = { {1.0f, 2.0f, 3.0f, 4.0f}, {5.0f, 6.0f, 7.0f, 8.0f} };
+
+	printf("%f\n", *(*arr + 1));
+	printf("%f\n", **(arr + 1));
+
+	printf("%p\n", &arr[0]);
+	printf("%p\n", &arr[0][0]);
+
+	printf("%f\n", **(arr + 1));
+
+	printf("%p\n", (arr + 1)); // 행 + 1
+	printf("%p\n", (&arr[1])); // 1행의 주소 
+	printf("%p\n", (arr[1])); // 1행의 이름
+	printf("%p\n", *(arr + 1)); //(행 + 1)의 역참조
+	printf("%p\n", (&arr[0] + 1)); // 0행의 주소 + 1 (포인터 연산)
+	printf("%p\n", (&arr[1][0])); // 1행 0열의 주소
+
+	printf("%f\n\n", *(*(arr + 1) + 2));
+
+	printf("%p\n", *(arr + 1));
+	printf("%p\n", *(*&*&*&arr + 1));
+	printf("%p\n", *(*&*&arr + 1));
+	printf("%p\n", *(arr + 1));
+
+
+	printf("\n");
+	printf("\n");
+	printf("\n");
+
+	int arr11[2][3] = {
+		{0, 1, 2},
+		{3, 4, 5}
+	};
+
+	int** ptrArr = arr11;
+
+	{
+		int arr0[3] = { 10, 20, 30 };
+		int arr1[3] = { 40, 50, 60 };
+
+		int* ptrArr[2] = { arr0, arr1 };
+
+		for (int i = 0; i < 2; i++)
+		{
+			for (int j = 0; j < 3; j++)
+			{
+				printf("%d (== %d, %d) => %p\n",
+					ptrArr[i][j], *(ptrArr[i] + j),
+					*(*(ptrArr + i) + j), &ptrArr[i][j]);
+			}
+		}
+	}
+
+	{
+		int myArr[2][3] = { {1,2,3}, {4,5,6} };
+
+		int* ptrArr[3];
+		ptrArr[0] = myArr[0];
+		ptrArr[1] = myArr[1];
+
+		for (int i = 0; i < 2; i++)
+		{
+			for (int j = 0; j < 3; j++)
+			{
+				printf("%d %d (== %d, %d) => %p %p\n",
+					myArr[i][j], ptrArr[i][j],
+					*(ptrArr[i] + j), *(*(ptrArr + i) + j),
+					&ptrArr[i][j], &myArr[i][j]
+				);
+			}
+		}
+	}
+}
+
+void pointer_and_const_arr()
+{
+	const int arr1[5] = { 0, 1, 2, 3, 4 };
+	
+	double arr2[3] = { 1.1, 2.2, 3.3 };
+	double* ptr1 = arr2;
+
+	*ptr1 = 30.0;
+	ptr1[0] = 3.4;
+
+
+	// const 확인
+	const double arr3[3] = { 1.1, 2.2, 3.3 };
+	double* ptr2 = arr3;
+
+	*ptr2 = 30.0;
+	ptr2[0] = 3.4;
+	printf("%f\n", arr3[0]);
+
+	const double arr4[3] = { 1.1, 2.2, 3.3 };
+	const double* ptr3 = arr4;
+
+	//*ptr3 = 30.0;
+
+	const double arr5[3] = { 1.1, 2.2, 3.3 };
+	const double* ptr4 = arr5;
+	ptr4 = arr4;
+
+	// const로 doble, const로 * 상수화
+	double const* const ptr5 = arr5;
+	// 가장 안전한 방법
+	//ptr5 += 1;
+
+
+
+}
+
+void void_pointer()
+{
+	int num = 10;
+	int* p = &num;
+
+	// 모든 포인터는 보이드 포인터로 가능
+	void* vp = p;
+
+	printf("p : %p\n", p);
+	printf("vp : %p\n", vp);
+
+	printf("p : %d\n", *p);
+	//타입형이 없기 때문에 오류
+	//printf("vp : %d\n", *vp);
+
+	int* np = (int*)vp;
+	printf("np : %d\n", *np);
+
+}
