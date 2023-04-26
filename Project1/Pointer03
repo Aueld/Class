@@ -1,0 +1,172 @@
+#include <stdio.h>
+
+/*
+	Call by value
+	Call by referrence
+*/
+
+void doublePointer();
+void SwapNumber(int, int);
+void SwapPtrNumber(int*, int*);
+void SwapPPtrNumber(int**, int**);
+
+//void MaxAndMun(int *arr, int size);
+// maxPtr에겐 큰 값, minPtr에겐 작은 값
+int main()
+{
+	//doublePointer();
+	//int a = 10, b = 20;
+	//
+	//int* pa = &a;
+	//int* pb = &b;
+
+	//int** ppa = &pa;
+	//int** ppb = &pb;
+	//{
+	//	// Call by value
+	//	SwapNumber(a, b);
+	//	printf("함수 밖 %d %d\n\n", a, b);
+
+	//	printf("-------------------------------------\n\n");
+
+	//	// Call by referrance
+	//	SwapPtrNumber(pa, pb);
+	//	printf("함수 밖 num  %d %d\n\n", a, b);
+	//	printf("함수 밖 ptr  %d %d\n\n", *pa, *pb);
+
+	//	printf("-------------------------------------\n\n");
+
+	//	SwapPPtrNumber(ppa, ppb);
+	//	printf("함수 밖 num  %d %d\n\n", a, b);
+	//	printf("함수 밖 ptr  %d %d\n\n", *pa, *pb);
+	//	printf("함수 밖 pptr %d %d\n\n", **ppa, **ppb);
+	//}
+
+	//{
+	//	int* maxPtr = 0;
+	//	int* minPtr = 0;
+
+	//	int arr[5];
+
+	//	for (int i = 0; i < 5; i++)
+	//	{
+	//		printf("정수 입력 %d : ", i + 1);
+	//		sacnf_s("%d", &arr[i]);
+	//	}
+
+	//	MaxAndMun(arr, 5);
+
+	//	printf("최대 : %d, 최소 : %d \n", *maxPtr, *minPtr);
+	//}
+
+	// 배열 포인터 vs 포인터 배열
+	{
+		// 포인터 배열
+		int a = 10, b = 20, c = 30;
+		int* pArr[3] = { &a, &b, &c };
+
+		printf("%d\n", *pArr[0]);
+		printf("%d\n", *pArr[1]);
+		printf("%d\n", *pArr[2]);
+
+		// -0--------------------------
+		
+		// 배열 포인터
+		int arr1[3] = { 0, 1, 2 };
+		int arr2[2][3] = { { 0, 1, 2 }, { 3, 4, 5 } };
+		int arr3[3][3] = { { 0, 1, 2 }, { 3, 4, 5 }, { 6, 7, 8 } };
+
+		// 연산자 우선순위 () 처리
+		int(*ptrArr)[3] = arr1;
+
+		for (int i = 0; i < 3; i++)
+			printf("%d ", ptrArr[0][i]);
+
+		printf("\n\n");
+		ptrArr = arr2;
+		
+		for (int i = 0; i < 2; i++)
+		{
+			for (int j = 0; j < 3; j++)
+			{
+				printf("%d", ptrArr[i][j]);
+			}
+			printf("\n");
+		}
+
+		printf("\n\n");
+		ptrArr = arr3;
+
+		for (int i = 0; i < 3; i++)
+		{
+			for (int j = 0; j < 3; j++)
+			{
+				printf("%d", ptrArr[i][j]);
+			}
+			printf("\n");
+		}
+	}
+
+	return 0;
+}
+
+void doublePointer()
+{
+	double num = 3.14;
+	double* ptr = &num;
+	double** pptr = &ptr;
+
+	printf("&dptr = 0x%p\n", &pptr);
+	printf("&ptr = 0x%p\n", &ptr);
+	printf("&a = 0x%p\n\n\n", &num);
+
+	printf("ptr : 0x%p\n", &ptr);
+	printf("ptr : 0x%p\n\n\n", pptr);
+
+	printf("ptr : 0x%p\n", &num);
+	printf("ptr : 0x%p\n", &ptr);
+	printf("ptr : 0x%p\n\n\n", *pptr);
+
+	printf("num = %g\n", num);
+	printf("num = %g\n", *ptr);
+	printf("num = %g\n", **pptr);
+
+	**pptr = 5.0;
+
+	printf("num = %g\n\n", num);
+}
+
+void SwapNumber(int a, int b)
+{
+	int temp = a;
+	a = b;
+	b = temp;
+
+	printf("함수 안 %d %d \n\n", a, b);
+}
+
+void SwapPtrNumber(int* a, int* b)
+{
+	int* temp = *a;
+	*a = *b;
+	*b = temp;
+
+	printf("ptr함수 안 %d %d \n\n", *a, *b);
+}
+
+void SwapPPtrNumber(int** a, int** b)
+{
+	// 변수의 주소 위치 변경
+
+	int* temp = *a;
+	*a = *b;
+	*b = temp;
+
+	printf("pptr함수 안 %d %d \n\n", **a, **b);	
+}
+
+//void MaxAndMun(int* arr, int size)
+//{
+//	for(int i = 0)
+//
+//}
