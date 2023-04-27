@@ -10,8 +10,6 @@ void SwapNumber(int, int);
 void SwapPtrNumber(int*, int*);
 void SwapPPtrNumber(int**, int**);
 
-//void MaxAndMun(int *arr, int size);
-// maxPtr에겐 큰 값, minPtr에겐 작은 값
 int main()
 {
 	//doublePointer();
@@ -40,23 +38,6 @@ int main()
 	//	printf("함수 밖 num  %d %d\n\n", a, b);
 	//	printf("함수 밖 ptr  %d %d\n\n", *pa, *pb);
 	//	printf("함수 밖 pptr %d %d\n\n", **ppa, **ppb);
-	//}
-
-	//{
-	//	int* maxPtr = 0;
-	//	int* minPtr = 0;
-
-	//	int arr[5];
-
-	//	for (int i = 0; i < 5; i++)
-	//	{
-	//		printf("정수 입력 %d : ", i + 1);
-	//		sacnf_s("%d", &arr[i]);
-	//	}
-
-	//	MaxAndMun(arr, 5);
-
-	//	printf("최대 : %d, 최소 : %d \n", *maxPtr, *minPtr);
 	//}
 
 	// 배열 포인터 vs 포인터 배열
@@ -164,9 +145,3 @@ void SwapPPtrNumber(int** a, int** b)
 
 	printf("pptr함수 안 %d %d \n\n", **a, **b);	
 }
-
-//void MaxAndMun(int* arr, int size)
-//{
-//	for(int i = 0)
-//
-//}
