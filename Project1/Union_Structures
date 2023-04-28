@@ -1,0 +1,234 @@
+#include <stdio.h>
+#include <stdbool.h>
+
+void union_();
+void union_and_structures();
+void union_and_structures2();
+void endianness();
+
+int main()
+{
+	//union_();
+	//union_and_structures();
+	//union_and_structures2();
+	endianness();
+
+	return 0;
+}
+
+void union_()
+{
+	// 구조체는 빈공간을 잡음
+	// 한 곳에 같이 담을수 없어서 16 바이트를 가짐
+	struct myStruct
+	{
+		char c;
+		int i;
+		double d;
+	};
+
+	// 구조체와 비슷하지만, 하나의 공간을 공유해서 사용
+	// 유니온은 가장 큰 값을 기준으로 잡음
+	union myUnion
+	{
+		char c;
+		int i;
+		double d;
+	};
+
+	struct myStruct ms;
+	union myUnion mu;
+
+	printf("구조체 공간의 사이즈\t %lld\n", sizeof(ms));
+	printf("구조체 멤버 c의 사이즈\t %lld\n", sizeof(ms.c));
+	printf("구조체 멤버 i의 사이즈\t %lld\n", sizeof(ms.i));
+	printf("구조체 멤버 d의 사이즈\t %lld\n", sizeof(ms.d));
+
+	printf("0x%p\n", &ms);
+	printf("0x%p\n", &ms.c);
+	printf("0x%p\n", &ms.i);
+	printf("0x%p\n", &ms.d);
+
+	printf("\n\n");
+
+	printf("유니온 공간의 사이즈\t %lld\n", sizeof(mu));
+	printf("유니온 멤버 c의 사이즈\t %lld\n", sizeof(mu.c));
+	printf("유니온 멤버 i의 사이즈\t %lld\n", sizeof(mu.i));
+	printf("유니온 멤버 d의 사이즈\t %lld\n", sizeof(mu.d));
+
+	printf("0x%p\n", &mu);
+	printf("0x%p\n", &mu.c);
+	printf("0x%p\n", &mu.i);
+	printf("0x%p\n", &mu.d);
+
+	// 공간을 공유하기 때문에 마지막에 대입된 값을 덮어씀
+	mu.i = 20;
+	printf("%d\n", mu.i);
+	mu.d = 42.1;
+	printf("%d\n", mu.i);
+	printf("%g\n", mu.d);
+	printf("%c\n", mu.c);
+	mu.c = 'a';
+	printf("%d\n", mu.i);
+	printf("%g\n", mu.d);
+	printf("%c\n", mu.c);
+}
+
+void union_and_structures()
+{
+	{
+		struct ptr
+		{
+			union
+			{
+				int* ip;
+				float* fp;
+			};
+			bool isInt; // 무슨 자료형인지 판단
+		};
+
+		struct ptr ptr;
+
+		int i = 100;
+		float f = 200.0f;
+
+		ptr.ip = &i;
+		ptr.isInt = true;
+
+		if (ptr.isInt)
+			printf("ptr is int : %d\n", *ptr.ip);
+		else
+			printf("ptr is float : %f\n", *ptr.fp);
+
+		ptr.fp = &f;
+		ptr.isInt = false;
+
+		if (ptr.isInt)
+			printf("ptr is int : %d\n", *ptr.ip);
+		else
+			printf("ptr is float : %f\n", *ptr.fp);
+
+	}
+
+	{
+		// 구조체 연합 활용
+		struct Location
+		{
+			union
+			{
+				struct { double x; double y; };
+				struct { double arr[2];	};
+			};
+		};
+
+		struct Location loc = { 1.1, 1.2 };
+
+		printf("%lf, %lf\n", loc.x, loc.y);
+		printf("%lf, %lf\n", loc.arr[0], loc.arr[1]);
+
+		loc.x = 10.2;
+		printf("%lf, %lf\n", loc.x, loc.y);
+		printf("%lf, %lf\n", loc.arr[0], loc.arr[1]);
+	}
+}
+
+#define PERSONAL 0
+#define COMPANY 1
+
+typedef struct
+{
+	char rrn1[7];
+	char rrn2[8];
+
+}personalOwner;
+
+typedef struct
+{
+	char crn1[4];
+	char crn2[3];
+	char crn3[2];
+}companyOwner;
+
+typedef struct
+{
+	char model[15];
+	int status;
+
+	union
+	{
+		personalOwner po;
+		companyOwner co;
+	};
+}carData;
+
+// 메인에서 사용하지 않는 함수
+void printCar(carData data)
+{
+	if (data.status == PERSONAL)
+	{
+		printf("personal owner = %s - %s\n",
+			data.po.rrn1,
+			data.po.rrn2);
+	}
+	else
+	{
+		printf("company owner = %s - %s - %s\n",
+			data.co.crn1,
+			data.co.crn2,
+			data.co.crn3
+		);
+	}
+}
+
+// 불필요한 값을 할당하지 않아 메모리 공간을 절약할 수 있음.
+
+void union_and_structures2()
+{
+	carData myCar = {
+		"Avante",
+		PERSONAL,
+		.po.rrn1 = "222222", // C언어 기능, CPP에서는 밖에서 선언
+		.po.rrn2 = "1111111"
+	};
+
+	carData comCar = {
+		"Avante",
+		COMPANY,
+		.co.crn1 = "111",
+		.co.crn2 = "22",
+		.co.crn3 = "3",
+	};
+
+	printCar(myCar);
+	printCar(comCar);
+}
+
+void endianness()
+{
+	union myUnion
+	{
+		int i;
+		char c;
+	};
+
+	union myUnion uni;
+
+	uni.i = 0x12345678;
+
+	printf("i : %x\n", uni.i);
+	printf("c : %x\n", uni.c);
+
+
+	/*
+	* 데이터를 읽는 방식
+		Endianness
+
+		Little Endian // 보통의 경우 이 방식 사용
+		데이터가 끝나는 마지막 단위가 가장 작은 메모리 주소에 위치
+
+		Big Endian // 사람이 읽는 방식과 동일, 네트워크 스트림, 엑스박스등에서 활용
+		데이터가 끝나는 마지막 단위가 가장 큰 메모리 주소에 위치
+	*/
+
+	// 구조체 단점 메모리 내부 단편화 - 구조체에 저장될때 남는 메모리로 인해 발생
+}
