@@ -1,0 +1,117 @@
+#include <stdio.h>
+
+void pointer_and_structure();
+
+int main()
+{
+	pointer_and_structure();
+
+	return 0;
+}
+
+void pointer_and_structure()
+{
+	{
+		struct person
+		{
+			char name[256];
+			int age;
+			float height;
+		};
+
+		struct person p = { "홍길동", 30,175.25f };
+
+		{
+			struct book
+			{
+				char name[256];
+				float price;
+			};
+		}
+
+		typedef struct
+		{
+			char given[256];
+			char family[256];
+		}names;
+
+		typedef struct
+		{
+			names fullName;
+			char mobile[256];
+		}friendInfo;
+
+		friendInfo myFriend[2] = {
+			{{"JG", "K"}, "3312-1234"},
+			{{"AS", "Q"}, "3312-3123" }
+		};
+
+		friendInfo* bestFriend;
+		// 구조체 배열은 주소를 가르키지 않아 & 필요
+		bestFriend = &myFriend[0];
+
+		/*
+			. 우선 순위
+			* 사용 접근
+			-> 사용 접근 // (*).
+		*/
+
+		printf("bestFriend[0] 이름\t: %s\n", (*bestFriend).fullName.given);
+		printf("bestFriend[0] 성\t: %s\n", bestFriend->fullName.family);
+
+		bestFriend++; // myFriend[1]
+
+		printf("bestFriend[1] 이름\t: %s\n", (*bestFriend).fullName.given);
+		printf("bestFriend[1] 성\t: %s\n", bestFriend->fullName.family);
+	}
+
+	{
+		typedef struct
+		{
+			char name[256];
+			char grade[256];
+			int damage;
+		}weapon;
+
+		typedef struct
+		{
+			char name[256];
+			int hp;
+			// 구조체 자체가 선언될때 초기화 하면 됨
+			weapon* equipWeapon;
+		}Player;
+
+		Player p = {
+			"Player",
+			100,
+			NULL
+		};
+
+		weapon sword = {
+			"Sword",
+			"Legend",
+			500
+		};
+
+		p.equipWeapon = &sword;
+
+		printf("플레이어 이름\t : %s\n", p.name);
+		printf("소지 무기\t : %s\n", p.equipWeapon->name);
+		printf("소지 무기 등급\t : %s\n", p.equipWeapon->grade);
+
+		weapon bow = {
+			"Bow",
+			"Common",
+			30
+		};
+		
+		// 포인터 주소 변경으로 값을 그대로 활용해도
+		// 바로 변경된 효과
+		p.equipWeapon = &bow;
+
+		printf("플레이어 이름\t : %s\n", p.name);
+		printf("소지 무기\t : %s\n", p.equipWeapon->name);
+		printf("소지 무기 등급\t : %s\n", p.equipWeapon->grade);
+
+	}
+}
