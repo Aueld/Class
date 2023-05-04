@@ -1,0 +1,232 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+// 힙 영역 - 동적 할당
+// 메모리를 관리할 수 있음, 실행 도 중 변경 가능
+// 
+//
+
+
+// 함수를 호출할때 새로운 메모리 할당 및
+// 함수 종료시 값이 유지되도록 하기 위해 동적 할당
+char* readName()
+{
+	char name[30]; // 지역 변수 <- 함수 종료시 사라짐
+	// 전역으로 만들면 낭비가 생김
+
+	printf("이름을 입력하시오 : ");
+	
+	//공백 포함
+	gets(name);
+	return name;
+}
+
+void dynamic_allocation()
+{
+	{
+		int* ptr = NULL;
+		// C언어의 동적할당은 자료형을 명시해야 함
+		//ptr = (int*)malloc(sizeof(int) * 5); // 20byte
+
+		int num = 5;
+		ptr = (int*)malloc(sizeof(int) * num); // 20byte
+		
+		// 안정성 검사
+		if (ptr == NULL)
+		{
+			printf("메모리 할당 실패!\n");
+			free(ptr);
+			exit(EXIT_FAILURE); // 1 반환, 비정상 종료
+			//exit(EXIT_SUCCESS); // 0 반환, 정상 종료
+		}
+
+		printf("Before free 0x%p\n", ptr);
+
+		// 항상 메모리를 해제 해줘야 함
+		// 하지 않으면 메모리 누수 현상이 생김
+		free(ptr);
+	
+		printf("After free 0x%p\n", ptr);
+		// 메모리는 해제해도 주소는 남아있음
+		// 허상 포인터 현상 (dangling pointer)
+		// - 메모리가 해제된 주소를 가리키는 포인터
+		// 잘못 접근시 문제가 발생 할 수 있음.
+		ptr = NULL;
+		// 메모리 해제 후 주소 공간도 NULL로 초기화 해야함.
+	
+		printf("After free, NULL 0x%p\n", ptr);
+	
+		// free와 NULL 대입 매크로 함수
+#define FREE(ptr) if (ptr != NULL) {free(ptr); ptr = NULL;}
+
+		FREE(ptr);
+	}
+
+	//calloc
+	{
+		int size = 0;
+		
+		printf("동적 할당할 int형 변수의 메모리 공간 입력 => ");
+		scanf_s("%d", &size);
+
+		int* ma, * ca;
+
+		// malloc 매개변수 (자료형 크기 * 크기)
+		// 선언만 하면 값 초기화 안됌
+		ma = (int*)malloc(sizeof(int) * size);
+		// calloc 매개변수 (크기, 자료형 크기)
+		// 선언과 동시에 값 초기화
+		ca = (int*)calloc(size, sizeof(int));
+
+		printf("\n초기화 전\n");
+
+		for (int i = 0; i < size; i++)
+		{
+			printf("ma[%d] : %d\n", i, ma[i]);
+			printf("ca[%d] : %d\n", i, ca[i]);
+		}
+
+		for (int i = 0; i < size; i++)
+			ma[i] = i;
+
+		printf("\n초기화 후\n");
+		for (int i = 0; i < size; i++)
+		{
+			printf("ma[%d] : %d\n", i, ma[i]);
+			printf("ca[%d] : %d\n", i, ca[i]);
+		}
+
+		free(ca);
+		ca = NULL;
+
+		free(ma);
+		ma = NULL;
+	}
+
+	// realloc
+	// 재할당, 가변 메모리 할당
+	{
+		int size = 0;
+
+		printf("동적 할당할 double형 변수의 메모리 공간 입력 => ");
+		scanf_s("%d", &size);
+
+		double* ptr = (double*)calloc(size, sizeof(double));
+
+		printf("\nptr의 할당받은 주소 : %p\n", ptr);
+
+		for (int i = 0; i < size; i++)
+		{
+			printf("ptr[%d] : %lf\n", i, ptr[i]);
+		}
+
+		printf("\n재할당할 double형 변수의 메모리 공간 입력 => ");
+		scanf_s("%d", &size);
+
+		// realloc 매개변수 (포인터 변수, 크기)
+		ptr = (double*)realloc((double*)ptr, size);
+
+		// 재할당한 곳의 값은 초기화 되지 않음.
+		// 재할당시 주소값 변경
+		// 외부 단편화 발생
+
+		printf("\nptr의 재할당받은 주소 : %p\n", ptr);
+
+		for (int i = 0; i < size; i++)
+		{
+			printf("ptr[%d] : %lf\n", i, ptr[i]);
+		}
+
+		// 외부 단편화 = 동적
+
+
+		free(ptr);
+		ptr = NULL;
+	}
+
+	// 연속된 데이터이므로 포인터 연산, 배열처럼 사용 가능
+	{
+		int n = 5;
+		double* ptr = (double*)malloc(n * sizeof(double));
+
+		if (ptr != NULL)
+		{
+			for (int i = 0; i < n; i++)
+			{
+				printf("ptr[%d] : %lf\n", i, ptr[i]);
+			}
+
+			printf("\n");
+
+			for (int i = 0; i < n; i++)
+			{
+				*(ptr + i) = (double)i + 1;
+			}
+
+			for (int i = 0; i < n; i++)
+			{
+				printf("ptr[%d] : %lf\n", i, ptr[i]);
+			}
+
+			free(ptr);
+			ptr = NULL;
+		}
+	}
+}
+
+char* scanName()
+{
+	char buffer[100] = { 0 };
+	printf("이름을 입력해 주세요 : ");
+	scanf_s("%s", buffer, sizeof(buffer));
+
+	int size = strlen(buffer) + sizeof((char)(NULL));
+
+	if (size == sizeof((char)(NULL)))
+		return NULL;
+
+	char* name = (char*)calloc(size, sizeof(char));
+
+	if (name != NULL)
+		strcpy_s(name, size, buffer);
+
+	return name;
+}
+
+int main()
+{
+	/*{
+		char* name1 = NULL;
+		char* name2 = NULL;
+
+		name1 = readName();
+		printf("name1 : %s\n", name1);
+
+		name2 = readName();
+		printf("name2 : %s\n", name2);
+	}*/
+
+	dynamic_allocation();
+
+	char* name = scanName();
+
+	printf("name : %s\n", name);
+
+	// 함수에서 해제하면 사라진 값을 해제하므로 함수 밖에서 쓰이고 난 후 메모히 해제
+	free(name);
+	name = NULL;
+
+	return 0;
+}
+
+/*
+* 과제 
+* 플레이어 수 입력 받아서 하는
+* 한명의 플레이어라도 500 이하 되거나 나가기 입력시 종료
+*  필수 구현 해야 할 족보
+* 
+	38광땡
+	13, 18 광땡
+	땡
+	끗
+*/
