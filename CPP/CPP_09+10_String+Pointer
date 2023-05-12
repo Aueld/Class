@@ -24,5 +24,11 @@ int main()
 
 	cout << c[2] << endl;
 
+	int* ptr = nullptr;
+	int* ptr2(nullptr);
+	int* ptr3{nullptr};
+
+	std::nullptr_t nptr;
+
 	return 0;
 }
