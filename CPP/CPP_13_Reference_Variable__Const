@@ -52,5 +52,9 @@ int main()
 
 	cout << n << endl;
 
+	//----------- Const
+	const int* conat a = 5;
+	// const 는 왼쪽에 적용, 단 첫 const는 가독성을 위해 오른쪽 적용
+	
 	return 0;
 }
