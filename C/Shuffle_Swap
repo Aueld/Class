@@ -1,20 +1,19 @@
-void Swap(int sour1, int dest1, int sour2, int dest2)
+void Swap(int ** board, int sour1, int dest1, int sour2, int dest2)
 {
-	int temp = bingo[sour1][dest1];
-	bingo[sour1][dest1] = bingo[sour2][dest2];
-	bingo[sour2][dest2] = temp;
+	int temp = board[sour1][dest1];
+	board[sour1][dest1] = board[sour2][dest2];
+	board[sour2][dest2] = temp;
 }
 
-
-void Shuffle(int n)
+void Shuffle(int** board, int n, int size)
 {
 	for (int i = 0; i < n; i++)
 	{
-		int sour1 = rand() % 5;
-		int dest1 = rand() % 5;
-		int sour2 = rand() % 5;
-		int dest2 = rand() % 5;
+		int sour1 = rand() % size;
+		int dest1 = rand() % size;
+		int sour2 = rand() % size;
+		int dest2 = rand() % size;
 
-		Swap(sour1, dest1, sour2, dest2);
+		Swap(board, sour1, dest1, sour2, dest2);
 	}
 }
