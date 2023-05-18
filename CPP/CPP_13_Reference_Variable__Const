@@ -23,8 +23,8 @@ int Ref(int& n)
 int main()
 {
 	/*
-		L-value reference &  : 변수
-		R-value reference && : 상수
+		L-value reference &  : 나중에 다시 접근이 가능한 값
+		R-value reference && : 식이 끝나면 접근이 불가능한 값
 	*/
 
 	int val = 7;
