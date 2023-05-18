@@ -1,0 +1,26 @@
+/*
+	POP - Procedual Oriented Programing // 함수 단위로 실행, 절차 지향
+	OOP - Object Oriented Programing // 오브젝트 단위로 실행, 객체 지향
+*/
+
+/*
+	- Class // 객체를 만들기 위한 설계도
+	
+	- Object // 실체화 된 대상, 객체, 클래스의 인스턴스
+
+	- Instance // 클래스를 통해 만들어진 실체, 인스턴스
+*/
+
+/*
+	객체지향(OOP) 4대 특징
+	
+	- 추상화 Abstraction
+		
+	- 캡슐화 Encapculation
+		: 정보은닉 Information hiding
+	- 상속 Inheritance 재사용과 확장
+
+	- 다형성 polymorphism
+		: 오버로딩
+		: 오버라이딩
+*/
