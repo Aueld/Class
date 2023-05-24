@@ -1,4 +1,4 @@
-#pragma once
+#pragma once // 중복시 한번만 선언
 class CPP_OPP_08_Calc // 헤더: 선언부
 {
 	int value;
