@@ -39,15 +39,108 @@ void Print(int val)
 	cout << val << endl;
 }
 
+class Minute
+{
+	int minute;
+public:
+	Minute(int minute) : minute(minute) {}
+
+	friend ostream& operator << (ostream& out, Minute& m)
+	{
+		out << m.minute << endl;
+		return out;
+	}
+};
+
+class Second
+{
+	int second;
+public:
+	Second (int second) : second(second) {}
+
+	friend ostream& operator << (ostream& out, Second& s)
+	{
+		out << s.second << endl;
+		return out;
+	}
+};
+
+class MilliSecond
+{
+	int milliSecond;
+public:
+	MilliSecond(int milliSecond) : milliSecond(milliSecond) {}
+
+	friend ostream& operator << (ostream& out, MilliSecond& ms)
+	{
+		out << ms.milliSecond << endl;
+		return out;
+	}
+};
+
+class Hour
+{
+	int hour;
+public:
+	Hour(int hour) : hour(hour) {}
+
+	friend ostream& operator << (ostream& out, Hour& h)
+	{
+		out << h.hour << endl;
+		return out;
+	}
+
+	operator Minute()
+	{
+		return hour * 60;
+	}
+
+	operator Second()
+	{
+		return hour * 60 * 60;
+	}
+
+	operator MilliSecond()
+	{
+		return hour * 60 * 60 * 1000;
+	}
+};
+
+void PrintHour(Hour hour)
+{
+	cout << hour;
+}
+
+void PrintMinute(Minute minute)
+{
+	cout << minute;
+}
+
+void PrintSecond(Second second)
+{
+	cout << second;
+}
+
+void PrintMilliSecond(MilliSecond ms)
+{
+	cout << ms;
+}
+
 int main()
 {
-	Won w(10);
+	//Won w(10);
 
-	Print(1);
-	Print(w);
+	//Print(1);
+	//Print(w);
 
-	Point p(1.0f, 2.0f, 3.0f);
-	PrintPoint(p);
+	//Point p(1.0f, 2.0f, 3.0f);
+	//PrintPoint(p);
+
+	Hour h(1);
+	PrintHour(h);
+	PrintMinute(h);
+	PrintSecond(h);
+	PrintMilliSecond(h);
 
 	return 0;
 }
