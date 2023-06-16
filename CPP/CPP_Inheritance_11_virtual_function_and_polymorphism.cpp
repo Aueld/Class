@@ -82,5 +82,9 @@ int main()
 	refD.Print4();
 	cout << endl;
 
+	// 가상 함수 테이블에 가상 함수 저장.
+	// 클래스당 하나만 생성
+	// final 함수가 선언 될때까지 상위 클래스로
+	
 	return 0;
 }
