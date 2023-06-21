@@ -17,71 +17,120 @@ using namespace std;
 */
 
 #pragma region pure virtual function, abstract class
+//
+//class Unit abstract
+//{
+//public:
+//	Unit(const string& name) : name(name) {}
+//
+//	auto GetName() const { return name; }
+//
+//	virtual void Move() const final
+//	{
+//		cout << "move" << endl;
+//	}
+//
+//	// 순수 가상 함수
+//	virtual void Attack() const abstract = 0;
+//	//virtual void Attack() const abstract;
+//	//virtual void Attack() const = 0;
+//
+//private:
+//	string name;
+//
+//};
+//
+//class Mage : public Unit
+//{
+//public:
+//	Mage(string name) : Unit(name) {}
+//
+//	void Attack() const override
+//	{
+//		cout << "마법" << endl;
+//	}
+//};
+//
+//class Hero : public Unit
+//{
+//public:
+//	Hero(string name) : Unit(name) {}
+//
+//	void Attack() const override
+//	{
+//		cout << "물리" << endl;
+//	}
+//};
+//
+//class Prist : public Unit
+//{
+//public:
+//	Prist(string name) : Unit(name) {}
+//};
+//
+//int main()
+//{
+//	//Unit unit("aa");
+//	// 순수 가상함수가 있는 클래스는 선언 불가능
+//
+//	Mage mage("mage");
+//	mage.Attack();
+//	
+//	Hero hero("hero");
+//	hero.Attack();
+//
+//	//Prist prist("prist");
+//	//prist.Attack();
+//	// 순수 가상함수의 재정의가 없어 사용 불가능
+//
+//	return 0;
+//}
+#pragma endregion
 
-class Unit abstract
+#pragma region Interface
+
+class IErrorLog
 {
 public:
-	Unit(const string& name) : name(name) {}
+	virtual ~IErrorLog() = default;
+	virtual bool ReportError(const char* const error) abstract;
+};
 
-	auto GetName() const { return name; }
-
-	virtual void Move() const final
+class FileErrorLog : public IErrorLog
+{
+public:
+	virtual bool ReportError(const char* const error)
 	{
-		cout << "move" << endl;
+		cout << "Writting error to a file" << endl;
+		return true;
 	}
-
-	// 순수 가상 함수
-	virtual void Attack() const abstract = 0;
-	//virtual void Attack() const abstract;
-	//virtual void Attack() const = 0;
-
-private:
-	string name;
-
 };
 
-class Mage : public Unit
+class ConsoleErrorLog : public IErrorLog
 {
 public:
-	Mage(string name) : Unit(name) {}
-
-	void Attack() const override
+	virtual bool ReportError(const char* const error)
 	{
-		cout << "마법" << endl;
+		cout << "Printing error to a console" << endl;
+		return true;
 	}
 };
 
-class Hero : public Unit
+// 순수 가상 함수는 실체화가 불가능, 포인터로 접근
+void DoSomething(IErrorLog& log)
 {
-public:
-	Hero(string name) : Unit(name) {}
-
-	void Attack() const override
-	{
-		cout << "물리" << endl;
-	}
-};
-
-class Prist : public Unit
-{
-public:
-	Prist(string name) : Unit(name) {}
-};
+	log.ReportError("Error");
+}
 
 int main()
 {
-	//Unit unit("aa");
-	// 순수 가상함수가 있는 클래스는 선언 불가능
+	FileErrorLog fileLog;
+	ConsoleErrorLog consoleLog;
 
-	Mage mage("mage");
-	mage.Attack();
-	
-	Hero hero("hero");
-	hero.Attack();
-
-	//Prist prist("prist");
-	//prist.Attack();
-	// 순수 가상함수의 재정의가 없어 사용 불가능
+	DoSomething(fileLog);
+	DoSomething(consoleLog);
 
 	return 0;
 }
+
+#pragma endregion
