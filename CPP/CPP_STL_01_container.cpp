@@ -5,7 +5,7 @@
 	컨테이너 (container)
 	- sequence		// ex) vector, 선형으로 저장하는 연속된 컨테이너
 	- associative	// ex) map, 일정한 규칙에 따라 저장하는 연관 컨테이너, 데이터 접근, 자동 정렬, 검색에 빠름, Key - value 형태
-	- adapter		// ex) stack, 특정 형태의 데이터만 지원, iterater 사용 불가, 변형된 컨테이너
+	- adapter		// ex) stack, 특정 형태의 데이터만 지원, iterator 사용 불가, 변형된 컨테이너
 
 	반복자 (interator)
 	// 컨테이너의 데이터를 접근하여 가르키는 것, 컨테이너의 포인터
