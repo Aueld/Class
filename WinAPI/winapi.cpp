@@ -74,7 +74,7 @@ int APIENTRY WinMain
 		nullptr		// 부가적인 정보
 	);
 
-	assert(hwnd != nullptr);
+	assert(hwnd != nullptr);	// 릴리즈 빌드시 자동 주석 처리
 
 	ShowWindow(hwnd, nCmdShow);
 	ShowCursor(TRUE);
