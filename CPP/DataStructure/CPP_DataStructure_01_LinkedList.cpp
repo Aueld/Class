@@ -15,6 +15,27 @@ void DoLinkedList()
 	}
 
 	Print();
+
+	cout << endll;
+
+	LinkedListNode* newNode = LinkedListNode::Create(100);
+	LinkedListNode::Insert(LinkedListNode::GetNode(2), newNode);
+	LinkedListNode* forNode = LinkedListNode::Create(300);
+	forNode->InsertHead();
+
+	Print();
+
+	cout << endll;
+
+	LinkedListNode::GetNode(3)->Remove();
+
+	Print();
+
+	cout << endll;
+
+	LinkedListNode::RemoveAll();
+
+	Print();
 }
 
 void Print()
