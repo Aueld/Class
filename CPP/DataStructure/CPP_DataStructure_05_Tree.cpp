@@ -1,34 +1,6 @@
 #include "stdafx.h"
 #include "Tree.h"
 
-void DoBinaryTree()
-{
-    BinaryTree tree;
-    int arr[15];
-
-    for (int& i : arr)
-    {
-        i = rand() % 100;
-        cout << i << " ";
-        tree.Insert(i);
-    }
-
-    cout << endll;
-
-    cout << "Before Remove" << endl;
-    tree.InOrder();
-
-    tree.Remove(arr[rand() % 15]);
-
-    cout << endl << "After Remove" << endl;
-    tree.InOrder();
-
-    cout << endll;
-    tree.Print();
-
-    return;
-}
-
 BinaryTree::~BinaryTree()
 {
     DestroyTree(Root);
