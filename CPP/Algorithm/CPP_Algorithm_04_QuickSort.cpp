@@ -45,12 +45,12 @@ void QuickSort(vector<int>& arr, int left, int right, bool check)
             while (true)
             {
                 do
-                {   // leftKey가 pivot보다 작으면 leftKey 증가
+                {   // leftKey의 값이 pivot보다 작으면 leftKey 증가
                     leftKey++;
                 } while (leftKey <= right && arr[leftKey] < pivot);
 
                 do
-                {   // rightKey가 pivot보다 크면 rightKey 증가
+                {   // rightKey의 값이 pivot보다 크면 rightKey 증가
                     rightKey--;
                 } while (rightKey >= left && arr[rightKey] > pivot);
 
@@ -76,11 +76,11 @@ void QuickSort(vector<int>& arr, int left, int right, bool check)
             while (true)
             {
                 do
-                {   // leftKey가 pivot보다 크면 leftKey 증가
+                {   // leftKey의 값이 pivot보다 크면 leftKey 증가
                     leftKey++;
                 } while (leftKey <= right && arr[leftKey] > pivot);
                 do
-                {   // rightKey가 pivot보다 작으면 rightKey 증가
+                {   // rightKey의 값이 pivot보다 작으면 rightKey 증가
                     rightKey--;
                 } while (rightKey >= left && arr[rightKey] < pivot);
 
