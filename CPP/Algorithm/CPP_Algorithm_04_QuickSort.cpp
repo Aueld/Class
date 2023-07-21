@@ -32,70 +32,41 @@ void DoQuickSort()
 
 void QuickSort(vector<int>& arr, int left, int right, bool check)
 {
-    int pivot, leftKey, rightKey;
+    // 리스트의 크기가 1 이하인 경우, 정렬이 이미 완료된 상태
+    if (left >= right)
+        return;
 
-    if (left < right)
+    // 리스트의 첫 요소를 pivot으로 설정
+    int pivot = arr[left];
+    int i = left + 1;
+    int j = right;
+
+    // i와 j가 교차 할 때까지 pivot보다 작은 요소는 i를,
+    // pivot보다 큰 요소는 j를 찾음.
+    while (i <= j)
     {
-        if (check)  // 오름차순
+        if (check)
         {
-            pivot = arr[left];  // 정렬할 벡터에 가장 왼쪽을 피벗으로 설정
-            leftKey = left;
-            rightKey = right + 1;
-
-            while (true)
-            {
-                do
-                {   // leftKey의 값이 pivot보다 작으면 leftKey 증가
-                    leftKey++;
-                } while (leftKey <= right && arr[leftKey] < pivot);
-
-                do
-                {   // rightKey의 값이 pivot보다 크면 rightKey 증가
-                    rightKey--;
-                } while (rightKey >= left && arr[rightKey] > pivot);
-
-                // leftKey와 rightKey가 교차할때 탈출
-                if (leftKey >= rightKey)
-                    break;
-
-                // leftKey와 rightKey가 교차하지 않았으므로 서로 스왑
-                swap(arr[leftKey], arr[rightKey]);
-            }
-            // leftKey와 rightKey가 교차하여 반복문을 탈출했으므로 가장 왼쪽 값과 rightKey에 해당하는 값을 스왑
-            swap(arr[left], arr[rightKey]);
-
-            QuickSort(arr, left, rightKey - 1, check);  // left ~ 피벗 값 부분 정렬
-            QuickSort(arr, rightKey + 1, right, check); // 피벗 값 ~ right 부분 정렬
+            while (i <= right && arr[i] <= pivot)
+                i++;
+            while (j >= left + 1 && arr[j] >= pivot)
+                j--;
         }
-        else        // 내림차순
+        else
         {
-            pivot = arr[right]; // 정렬할 벡터에 가장 오른쪽을 피벗으로 설정
-            leftKey = left - 1;
-            rightKey = right;
-
-            while (true)
-            {
-                do
-                {   // leftKey의 값이 pivot보다 크면 leftKey 증가
-                    leftKey++;
-                } while (leftKey <= right && arr[leftKey] > pivot);
-                do
-                {   // rightKey의 값이 pivot보다 작으면 rightKey 증가
-                    rightKey--;
-                } while (rightKey >= left && arr[rightKey] < pivot);
-
-                // leftKey와 rightKey가 교차할때 탈출
-                if (leftKey >= rightKey)
-                    break;
-
-                // leftKey와 rightKey가 교차하지 않았으므로 서로 스왑
-                swap(arr[leftKey], arr[rightKey]);
-            }
-            // leftKey와 rightKey가 교차하여 반복문을 탈출했으므로 가장 leftKey값과 가장 오른쪽에 해당하는 값을 스왑
-            swap(arr[leftKey], arr[right]);
-
-            QuickSort(arr, left, leftKey - 1, check);   // left ~ 피벗 값 부분 정렬
-            QuickSort(arr, leftKey + 1, right, check);  // 피벗 값 ~ right 부분 정렬
+            while (i <= right && arr[i] > pivot)
+                i++;
+            while (j >= left + 1 && arr[j] < pivot)
+                j--;
         }
+
+        // i와 j가 교차하지 않은 경우, i와 j의 요소를 swap
+        if (i <= j)
+            swap(arr[i], arr[j]);
     }
+    // pivot을 기준으로 분할된 왼쪽과 오른쪽 부분 리스트를 재귀적으로 정렬
+    swap(arr[left], arr[j]);
+
+    QuickSort(arr, left, j - 1, check);
+    QuickSort(arr, i + 1, right, check);
 }
