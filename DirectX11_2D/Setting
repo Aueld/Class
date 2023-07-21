@@ -1,0 +1,15 @@
+Framework
+// 포함 디렉터리
+$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir);$(SolutionDir)_Libraries\DirectX11_SDK\Include\;$(IncludePath)
+
+// 라이브러리 디렉터리
+$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(SolutionDir)_Libraries\DirectX11_SDK\Lib\x86\;$(LibraryPath)
+
+//--------------------------------//
+
+UnitTest
+// 포함 디렉터리
+$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir);$(SolutionDir)_Libraries\DirectX11_SDK\Include\;$(IncludePath)
+
+// 라이브러리 디렉터리
+$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(SolutionDir)_Libraries\DirectX11_SDK\Lib\x86\;$(SolutionDir).Out\Framework\;$(LibraryPath)
