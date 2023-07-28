@@ -1,0 +1,58 @@
+#pragma once
+#include "Framework.h"
+
+class WorldBuffer : public ShaderBuffer
+{
+	// 행렬들을 전달 변환
+public:
+	WorldBuffer() : ShaderBuffer(&data, sizeof(Data))
+	{
+		D3DXMatrixIdentity(&data.World);
+	}
+
+	void SetWorld(Matrix world)
+	{
+		// 전치 행렬
+		D3DXMatrixTranspose(&data.World, &world);
+	}
+
+	struct Data
+	{
+		Matrix World;
+	};
+
+private:
+	Data data;
+};
+
+class VPBuffer : public ShaderBuffer
+{
+public :
+	VPBuffer() : ShaderBuffer(&data, sizeof(Data))
+	{
+		D3DXMatrixIdentity(&data.View);
+		D3DXMatrixIdentity(&data.Projection);
+	}
+
+	void SetView(Matrix view)
+	{
+		// 전치 행렬
+		D3DXMatrixTranspose(&data.View, &view);
+	}
+
+	void SetProjection(Matrix projection)
+	{
+		// 전치 행렬
+		D3DXMatrixTranspose(&data.Projection, &projection);
+	}
+
+	struct Data
+	{
+		Matrix View;
+		Matrix Projection;
+	};
+private:
+	Data data;
+};
+
+// 3D 변환 : World View Projection
