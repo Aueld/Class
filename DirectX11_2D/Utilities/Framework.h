@@ -78,3 +78,4 @@ extern HWND handle;
 
 #include "Renders/Resources/VertexType.h"
 #include "Renders/Resources/ShderBuffer.h"
+#include "Renders/Resources/GlobalBuffer.h"
