@@ -38,14 +38,14 @@ inline void VertexBuffer::Create(const vector<T>& vertices, const D3D11_USAGE& u
 	desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	desc.ByteWidth = stride * count;
 
-	// CPU 액세스 플래그 설정
+	// GPU, CPU 액세스 플래그 설정
 	switch (usage)
 	{
 	case D3D11_USAGE_DEFAULT:
 	case D3D11_USAGE_IMMUTABLE:
 		break;
 
-	case D3D_USAGE_DYNAMIC:
+	case D3D11_USAGE_DYNAMIC:
 		desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 		break;
 
@@ -54,4 +54,12 @@ inline void VertexBuffer::Create(const vector<T>& vertices, const D3D11_USAGE& u
 		break;
 	}
 
+	// 사본 서브 데이터 생성
+	D3D11_SUBRESOURCE_DATA subData;
+	ZeroMemory(&subData, sizeof(D3D11_SUBRESOURCE_DATA));
+
+	subData.pSysMem = vertices.data();
+
+	HRESULT hr = DEVICE->CreateBuffer(&desc, &subData, &buffer);
+	CHECK(hr);
 }
