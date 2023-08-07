@@ -7,11 +7,11 @@ Rect::Rect(Vector3 position, Vector3 size, float rotation)
 	// 정점 버퍼 생성
 	vertices.assign(4, VertexColor());
 	vertices[0].position = Vector3(-0.5f, -0.5f, 0.0f);
-	vertices[1].position = Vector3(-0.5f, 0.5f, 0.0f);
+	vertices[1].position = Vector3(0.5f, 0.5f, 0.0f);
 	vertices[2].position = Vector3(0.5f, -0.5f, 0.0f);
 	vertices[3].position = Vector3(-0.5f, 0.5f, 0.0f);
 
-	for (auto v : vertices)
+	for (auto& v : vertices)
 	{
 		v.color = color;
 	}
