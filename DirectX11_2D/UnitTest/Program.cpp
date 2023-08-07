@@ -3,9 +3,38 @@
 
 #include "Systems/Window.h"
 
+#include "Demos/01_RectDemo.h"
+
 void Program::Init()
 {
-	
+	{
+		vpb = new VPBuffer();
+
+		D3DXMatrixLookAtLH
+		(
+		   &view,
+		   &Vector3(0, 0, 0),
+		   &Vector3(0, 0, 1),
+		   &Vector3(0, 1, 0)
+		);
+
+		D3DXMatrixOrthoOffCenterLH
+		(
+			&proj,
+			0.0f,				//
+			(float)WinMaxWidth,	//
+			0.0f,				//
+			(float)WinMaxHeight,//
+			0,
+			1
+		);
+
+		vpb->SetView(view);
+		vpb->SetProjection(proj);
+	}
+
+	Push(new RectDemo);
+
 }
 
 void Program::Destroy()
