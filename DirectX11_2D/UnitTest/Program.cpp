@@ -12,19 +12,19 @@ void Program::Init()
 
 		D3DXMatrixLookAtLH
 		(
-		   &view,
-		   &Vector3(0, 0, 0),
-		   &Vector3(0, 0, 1),
-		   &Vector3(0, 1, 0)
+			&view,
+			&Vector3(0, 0, 0),
+			&Vector3(0, 0, 1),
+			&Vector3(0, 1, 0)
 		);
 
 		D3DXMatrixOrthoOffCenterLH
 		(
 			&proj,
-			0.0f,				//
-			(float)WinMaxWidth,	//
-			0.0f,				//
-			(float)WinMaxHeight,//
+			0.0f,
+			(float)WinMaxWidth,
+			0.0f,
+			(float)WinMaxHeight,
 			0,
 			1
 		);
@@ -34,13 +34,11 @@ void Program::Init()
 	}
 
 	Push(new RectDemo);
-
 }
 
 void Program::Destroy()
 {
-
-
+	SAFE_DELETE(vpb);
 	for (IObject* obj : objs)
 	{
 		obj->Destroy();
@@ -56,7 +54,7 @@ void Program::Update()
 
 void Program::Render()
 {
-
+	vpb->SetVSBuffer(1);
 
 	for (IObject* obj : objs)
 		obj->Render();
