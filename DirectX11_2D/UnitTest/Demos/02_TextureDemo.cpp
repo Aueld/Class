@@ -5,7 +5,12 @@
 
 void TextureDemo::Init()
 {
-	tr = new TextureRect(Vector3(WinMaxWidth / 2, WinMaxHeight / 2, 0), Vector3(200, 200, 0), 0, TexturePath + L"sadcat.jpg");
+	tr = new TextureRect
+	(
+		Vector3(WinMaxWidth / 2, WinMaxHeight / 2, 0),
+		Vector3(200, 200, 0), 0,
+		TexturePath + L"sadcat.jpg"
+	);
 }
 
 void TextureDemo::Destroy()
