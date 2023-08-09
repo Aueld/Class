@@ -63,7 +63,7 @@ float4 PS(PixelInput input) : SV_Target
 		
 		주요 슬롯
 			상수 버퍼 슬롯
-				상수 데이터를 저장하는데 사요으 VS와 PS에서 공유될 수 있음
+				상수 데이터를 저장하는데 사용, VS와 PS에서 공유될 수 있음
 				상수 버퍼 슬롯은 register(b#)을 사용하여 지정
 		
 			텍스처 슬롯
