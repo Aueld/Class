@@ -21,6 +21,8 @@ public:
     void Render();
     void GUI();
 
+    void SetShader(wstring ShaderPath);
+
 protected:
     Pivot pivot;
 
