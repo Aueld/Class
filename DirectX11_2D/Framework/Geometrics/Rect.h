@@ -1,33 +1,38 @@
 #pragma once
+
 class Rect
 {
 public:
-	Rect(Vector3 position, Vector3 size, float rotation);
-	~Rect();
+    Rect(Vector3 position, Vector3 size, float rotation);
+    ~Rect();
 
-	void Update();
-	void Render();
+    void Update();
+    void Render();
+
+    void GUI();
+    
+    void UpdateColor();
 
 private:
-	vector<VertexColor> vertices;
-	VertexBuffer* vb;
+    vector<VertexColor> vertices;
+    VertexBuffer* vb;
 
-	vector<uint> indices;
-	IndexBuffer* ib;
+    vector<uint> indices;
+    IndexBuffer* ib;
 
-	InputLayout* il;
+    InputLayout* il;
 
-	VertexShader* vs;
-	PixelShader* ps;
+    VertexShader* vs;
+    PixelShader* ps;
 
-	WorldBuffer* wb;
-	Matrix world, S, R, t;
+    WorldBuffer* wb;
+    Matrix world, S, R, T;
 
-	Vector3 position;
-	Vector3 size;
-	float rotation;	// 2d 이므로 한 축으로만 회전
+    Vector3 position;
+    Vector3 size;
+    float rotation;
 
-	Color color = Color(1, 0, 0, 1);
+    Color color = Color(1, 0, 0, 1);
 
+    BoundingBox* box = nullptr;
 };
-
