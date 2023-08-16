@@ -3,18 +3,9 @@
 class TextureRect
 {
 public:
-    enum Pivot
-    {
-        CENTER = 0,
-        LEFT,
-        RIGHT,
-        UP,
-        DOWN
-    };
-
-public:
 	TextureRect(Vector3 position, Vector3 size, float rotation, wstring path, Pivot pivot = CENTER);
-	virtual ~TextureRect();
+    TextureRect(Vector3 position, Vector3 size, float rotation);
+    virtual ~TextureRect();
 
     void Update();
 
@@ -22,9 +13,10 @@ public:
     void GUI();
 
     void SetShader(wstring ShaderPath);
+    void SetSRV(ID3D11ShaderResourceView* srv) { this->srv = srv; }
 
 protected:
-    Pivot pivot;
+    Pivot pivot = Pivot::CENTER;
 
 	vector<VertexTexture> vertices;
 	VertexBuffer* vb = nullptr;
