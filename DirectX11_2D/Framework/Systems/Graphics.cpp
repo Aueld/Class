@@ -31,6 +31,11 @@ void Graphics::SetViewport(const UINT & width, const UINT & height)
 	viewport.MaxDepth = 1.0f;
 }
 
+void Graphics::InitViewport()
+{
+	deviceContext->RSSetViewports(1, &viewport);
+}
+
 // 생성 초기화
 void Graphics::Begin()
 {
