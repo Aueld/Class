@@ -8,12 +8,10 @@ TextureRect::TextureRect(Vector3 position, Vector3 size, float rotation, wstring
 
     //{   // 마름모
     //    vertices.assign(4, VertexTexture());
-
     //    vertices[0].position = Vector3(-0.5f, +0.0f, 0.0f);
     //    vertices[1].position = Vector3(+0.0f, +0.5f, 0.0f);
     //    vertices[2].position = Vector3(+0.5f, +0.0f, 0.0f);
     //    vertices[3].position = Vector3(+0.0f, -0.5f, 0.0f);
-
     //    vertices[0].uv = Vector2(0, 0.5);
     //    vertices[1].uv = Vector2(0.5, 0);
     //    vertices[2].uv = Vector2(1, 0.5);
@@ -59,6 +57,37 @@ TextureRect::TextureRect(Vector3 position, Vector3 size, float rotation, wstring
         nullptr
     );
     CHECK(hr);  // CHECK에서 문제 생길시 경로 문제
+}
+
+TextureRect::TextureRect(Vector3 position, Vector3 size, float rotation)
+    : position(position), size(size), rotation(rotation)
+{
+    SetVertices();
+
+    // 정점 버퍼
+    vb = new VertexBuffer();
+    vb->Create(vertices, D3D11_USAGE_DYNAMIC);
+
+    // 인덱스 버퍼
+    indices = { 0,1,2,0,3,1 };
+
+    ib = new IndexBuffer();
+    ib->Create(indices, D3D11_USAGE_IMMUTABLE);
+
+    // 정점 셰이더
+    vs = new VertexShader();
+    vs->Create(ShaderPath + L"VertexTexture.hlsl", "VS");
+
+    // 픽셀 셰이더
+    ps = new PixelShader();
+    ps->Create(ShaderPath + L"VertexTexture.hlsl", "PS");
+
+    // 입력배치
+    il = new InputLayout();
+    il->Create(VertexTexture::descs, VertexTexture::count, vs->GetBlob());
+
+    // 월드 버퍼
+    wb = new WorldBuffer();
 }
 
 TextureRect::~TextureRect()
@@ -130,31 +159,31 @@ void TextureRect::SetVertices()
 
     switch (pivot)
     {
-    case TextureRect::CENTER:
+    case CENTER:
         vertices[0].position = Vector3(-0.5f, -0.5f, 0.0f);
         vertices[1].position = Vector3(+0.5f, +0.5f, 0.0f);
         vertices[2].position = Vector3(+0.5f, -0.5f, 0.0f);
         vertices[3].position = Vector3(-0.5f, +0.5f, 0.0f);
         break;
-    case TextureRect::LEFT:
+    case LEFT:
         vertices[0].position = Vector3(+0.0f, -0.5f, 0.0f);
         vertices[1].position = Vector3(+1.0f, +0.5f, 0.0f);
         vertices[2].position = Vector3(+1.0f, -0.5f, 0.0f);
         vertices[3].position = Vector3(+0.0f, +0.5f, 0.0f);
         break;
-    case TextureRect::RIGHT:
+    case RIGHT:
         vertices[0].position = Vector3(-1.0f, -0.5f, 0.0f);
         vertices[1].position = Vector3(+0.0f, +0.5f, 0.0f);
         vertices[2].position = Vector3(+0.0f, -0.5f, 0.0f);
         vertices[3].position = Vector3(-1.0f, +0.5f, 0.0f);
         break;
-    case TextureRect::UP:
+    case UP:
         vertices[0].position = Vector3(-0.5f, -1.0f, 0.0f);
         vertices[1].position = Vector3(+0.5f, +0.0f, 0.0f);
         vertices[2].position = Vector3(+0.5f, -1.0f, 0.0f);
         vertices[3].position = Vector3(-0.5f, +0.0f, 0.0f);
         break;
-    case TextureRect::DOWN:
+    case DOWN:
         vertices[0].position = Vector3(-0.5f, +0.0f, 0.0f);
         vertices[1].position = Vector3(+0.5f, +1.0f, 0.0f);
         vertices[2].position = Vector3(+0.5f, +0.0f, 0.0f);
