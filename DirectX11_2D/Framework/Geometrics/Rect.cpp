@@ -5,7 +5,7 @@ Rect::Rect(Vector3 position, Vector3 size, float rotation)
     : position(position), size(size), rotation(rotation)
 {
     vertices.assign(4, VertexColor());
-    
+
     vertices[0].position = Vector3(-0.5f, -0.5f, 0.0f);
     vertices[1].position = Vector3(+0.5f, +0.5f, 0.0f);
     vertices[2].position = Vector3(+0.5f, -0.5f, 0.0f);
@@ -37,6 +37,8 @@ Rect::Rect(Vector3 position, Vector3 size, float rotation)
 
     // 월드 버퍼
     wb = new WorldBuffer();
+
+    box = new BoundingBox(position, size, rotation, Color(1, 0, 0, 1), CENTER);
 }
 
 Rect::~Rect()
