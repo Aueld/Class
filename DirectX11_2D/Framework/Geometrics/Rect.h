@@ -9,8 +9,15 @@ public:
     void Update();
     void Render();
 
+    void SetColor(Color color);
+
     void GUI();
-    
+
+    BoundingBox* GetBox() { return box; }
+
+    void Move();
+
+private:
     void UpdateColor();
 
 private:
