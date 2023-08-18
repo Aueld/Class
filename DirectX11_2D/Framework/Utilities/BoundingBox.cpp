@@ -3,35 +3,30 @@
 
 BoundingBox::BoundingBox(Vector3 position, Vector3 size, float rotation, Color color, Pivot pivot)
 {
-	edge = new RectEdge();
+    edge = new RectEdge;
+    data = new AxisData;
 
     SetVertices();
 
-    // 정점 버퍼
     vb = new VertexBuffer();
     vb->Create(vertices, D3D11_USAGE_DYNAMIC);
-    
-    // 인덱스 버퍼
+
     ib = new IndexBuffer();
     indices = { 0,1,2,0,3,1 };
     ib->Create(indices, D3D11_USAGE_IMMUTABLE);
 
-    // 정점 셰이더
     vs = new VertexShader();
-    vs->Create(ShaderPath + L"CollisionShader.hlsl", "VS");
+    //vs->Create(ShaderPath + L"CollisionShader.hlsl", "VS");
+    vs->Create(ShaderPath + L"VertexColor.hlsl", "VS");
 
-    // 픽셀 셰이더
     ps = new PixelShader();
-    ps->Create(ShaderPath + L"CollisionShader.hlsl", "PS");
+    //ps->Create(ShaderPath + L"CollisionShader.hlsl", "PS");
+    ps->Create(ShaderPath + L"VertexColor.hlsl", "PS");
 
-    // 입력배치
     il = new InputLayout();
     il->Create(VertexColor::descs, VertexColor::count, vs->GetBlob());
-
-    // 월드 버퍼
-    wb = new WorldBuffer();
-
     
+    wb = new WorldBuffer();
 }
 
 BoundingBox::~BoundingBox()
@@ -43,6 +38,7 @@ BoundingBox::~BoundingBox()
     SAFE_DELETE(ib);
     SAFE_DELETE(vb);
     SAFE_DELETE(edge);
+    SAFE_DELETE(data);
 }
 
 void BoundingBox::Update(Vector3 position, Vector3 size, float rotation)
@@ -64,26 +60,95 @@ void BoundingBox::Update(Vector3 position, Vector3 size, float rotation)
 
 void BoundingBox::Render()
 {
-    // IA
     vb->SetIA();
     ib->SetIA();
     il->SetIA();
     DC->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-    // VS
     vs->SetShader();
-
-    // PS
     ps->SetShader();
+
     wb->SetVSBuffer(0);
 
-    // OM
     DC->DrawIndexed(ib->GetCount(), 0, 0);
 }
 
-bool BoundingBox::AABB(BoundingBox * a, BoundingBox * b)
+bool BoundingBox::AABB(BoundingBox* a, BoundingBox* b)
 {
-	return false;
+    if (!a || !b)
+        return false;
+
+    RectEdge aEdge = *a->edge;
+    RectEdge bEdge = *b->edge;
+
+    if (aEdge.RB.x >= bEdge.LT.x &&
+        aEdge.LT.x <= bEdge.RB.x &&
+        aEdge.LT.y >= bEdge.RB.y &&
+        aEdge.RB.y <= bEdge.LT.y)
+        return true;
+
+    return false;
+}
+
+bool BoundingBox::OBB(BoundingBox* a, BoundingBox* b)
+{
+    AxisData ad = *a->data;
+    AxisData bd = *b->data;
+
+    Vector3 centerDir, axis;
+    float centerProjDist, r1, r2;
+
+    centerDir = ad.centerPos - bd.centerPos;
+
+    // a Rect : X axis
+    axis = ad.axisDir[x];
+
+    centerProjDist = abs(D3DXVec3Dot(&centerDir, &axis));
+
+    r1 = ad.axisLen[x];
+    r2 = abs(D3DXVec3Dot(&bd.axisDir[x], &axis) * bd.axisLen[x]) +
+        abs(D3DXVec3Dot(&bd.axisDir[y], &axis) * bd.axisLen[y]);
+
+    if (centerProjDist > r1 + r2)
+        return false;
+
+    // a Rect : Y axis
+    axis = ad.axisDir[y];
+
+    centerProjDist = abs(D3DXVec3Dot(&centerDir, &axis));
+
+    r1 = ad.axisLen[y];
+    r2 = abs(D3DXVec3Dot(&bd.axisDir[x], &axis) * bd.axisLen[x]) +
+        abs(D3DXVec3Dot(&bd.axisDir[y], &axis) * bd.axisLen[y]);
+
+    if (centerProjDist > r1 + r2)
+        return false;
+
+    // b Rect : X axis
+    axis = bd.axisDir[x];
+
+    centerProjDist = abs(D3DXVec3Dot(&centerDir, &axis));
+
+    r1 = bd.axisLen[x];
+    r2 = abs(D3DXVec3Dot(&bd.axisDir[x], &axis) * bd.axisLen[x]) +
+        abs(D3DXVec3Dot(&bd.axisDir[y], &axis) * bd.axisLen[y]);
+
+    if (centerProjDist > r1 + r2)
+        return false;
+
+    // b Rect : Y axis
+    axis = bd.axisDir[y];
+
+    centerProjDist = abs(D3DXVec3Dot(&centerDir, &axis));
+
+    r1 = bd.axisLen[y];
+    r2 = abs(D3DXVec3Dot(&bd.axisDir[x], &axis) * bd.axisLen[x]) +
+        abs(D3DXVec3Dot(&bd.axisDir[y], &axis) * bd.axisLen[y]);
+
+    if (centerProjDist > r1 + r2)
+        return false;
+
+    return true;
 }
 
 void BoundingBox::SetVertices()
@@ -92,36 +157,36 @@ void BoundingBox::SetVertices()
 
     switch (pivot)
     {
-    case CENTER:
-        vertices[0].position = Vector3(-0.5f, -0.5f, 0.0f);
-        vertices[1].position = Vector3(+0.5f, +0.5f, 0.0f);
-        vertices[2].position = Vector3(+0.5f, -0.5f, 0.0f);
-        vertices[3].position = Vector3(-0.5f, +0.5f, 0.0f);
-        break;
-    case LEFT:
-        vertices[0].position = Vector3(+0.0f, -0.5f, 0.0f);
-        vertices[1].position = Vector3(+1.0f, +0.5f, 0.0f);
-        vertices[2].position = Vector3(+1.0f, -0.5f, 0.0f);
-        vertices[3].position = Vector3(+0.0f, +0.5f, 0.0f);
-        break;
-    case RIGHT:
-        vertices[0].position = Vector3(-1.0f, -0.5f, 0.0f);
-        vertices[1].position = Vector3(+0.0f, +0.5f, 0.0f);
-        vertices[2].position = Vector3(+0.0f, -0.5f, 0.0f);
-        vertices[3].position = Vector3(-1.0f, +0.5f, 0.0f);
-        break;
-    case UP:
-        vertices[0].position = Vector3(-0.5f, -1.0f, 0.0f);
-        vertices[1].position = Vector3(+0.5f, +0.0f, 0.0f);
-        vertices[2].position = Vector3(+0.5f, -1.0f, 0.0f);
-        vertices[3].position = Vector3(-0.5f, +0.0f, 0.0f);
-        break;
-    case DOWN:
-        vertices[0].position = Vector3(-0.5f, +0.0f, 0.0f);
-        vertices[1].position = Vector3(+0.5f, +1.0f, 0.0f);
-        vertices[2].position = Vector3(+0.5f, +0.0f, 0.0f);
-        vertices[3].position = Vector3(-0.5f, +1.0f, 0.0f);
-        break;
+        case CENTER:
+            vertices[0].position = Vector3(-0.5f, -0.5f, 0.0f);
+            vertices[1].position = Vector3(+0.5f, +0.5f, 0.0f);
+            vertices[2].position = Vector3(+0.5f, -0.5f, 0.0f);
+            vertices[3].position = Vector3(-0.5f, +0.5f, 0.0f);
+            break;
+        case LEFT:
+            vertices[0].position = Vector3(-0.0f, -0.5f, 0.0f);
+            vertices[1].position = Vector3(+1.0f, +0.5f, 0.0f);
+            vertices[2].position = Vector3(+1.0f, -0.5f, 0.0f);
+            vertices[3].position = Vector3(-0.0f, +0.5f, 0.0f);
+            break;
+        case RIGHT:
+            vertices[0].position = Vector3(-1.0f, -0.5f, 0.0f);
+            vertices[1].position = Vector3(+0.0f, +0.5f, 0.0f);
+            vertices[2].position = Vector3(+0.0f, -0.5f, 0.0f);
+            vertices[3].position = Vector3(-1.0f, +0.5f, 0.0f);
+            break;
+        case UP:
+            vertices[0].position = Vector3(-0.5f, -1.0f, 0.0f);
+            vertices[1].position = Vector3(+0.5f, +0.0f, 0.0f);
+            vertices[2].position = Vector3(+0.5f, -1.0f, 0.0f);
+            vertices[3].position = Vector3(-0.5f, +0.0f, 0.0f);
+            break;
+        case DOWN:
+            vertices[0].position = Vector3(-0.5f, -0.0f, 0.0f);
+            vertices[1].position = Vector3(+0.5f, +1.0f, 0.0f);
+            vertices[2].position = Vector3(+0.5f, -0.0f, 0.0f);
+            vertices[3].position = Vector3(-0.5f, +1.0f, 0.0f);
+            break;
     }
 
     for (auto& v : vertices)
@@ -130,8 +195,59 @@ void BoundingBox::SetVertices()
 
 void BoundingBox::UpdateCollisionData()
 {
+    // AABB
     D3DXVec3TransformCoord(&edge->LT, &vertices[3].position, &world);
     D3DXVec3TransformCoord(&edge->LB, &vertices[0].position, &world);
     D3DXVec3TransformCoord(&edge->RT, &vertices[1].position, &world);
     D3DXVec3TransformCoord(&edge->RB, &vertices[2].position, &world);
+
+    // OBB
+    {
+        // Center Postion Vector Update
+        {
+            data->centerPos = Vector3(
+                (edge->LT.x + edge->LB.x + edge->RT.x + edge->RB.x) / 4.0f,
+                (edge->LT.y + edge->LB.y + edge->RT.y + edge->RB.y) / 4.0f,
+                0
+            );
+        }
+    }
+
+    // Axis Vector Update
+    {
+        D3DXVec3TransformNormal(&data->axisDir[x], &Values::RightVec, &world);
+        D3DXVec3TransformNormal(&data->axisDir[y], &Values::UpVec, &world);
+
+        D3DXVec3Normalize(&data->axisDir[x], &data->axisDir[x]);
+        D3DXVec3Normalize(&data->axisDir[y], &data->axisDir[y]);
+    }
+
+    // Axis Length Update
+    {
+        Vector3 unitAxis[2] = { data->axisDir[x], data->axisDir[y] };
+        Vector3 verticesPos[4] = { edge->LT, edge->LB, edge->RT, edge->RB };
+
+        float minValues[2] = { INT_MAX, INT_MAX };
+        float maxValues[2] = { INT_MIN, INT_MIN };
+
+        for (int i = 0; i < 4; ++i)
+        {
+            Vector3 point = verticesPos[i];
+
+            for (int j = 0; j < 2; j++)
+            {
+                float projection = D3DXVec3Dot(&point, &unitAxis[j]);
+
+                if (projection < minValues[j])
+                    minValues[j] = projection;
+
+                if (projection > maxValues[j])
+                    maxValues[j] = projection;
+            }
+        }
+
+        data->axisLen[x] = (maxValues[x] - minValues[x]) / 2;
+        data->axisLen[y] = (maxValues[y] - minValues[y]) / 2;
+    }
+
 }
