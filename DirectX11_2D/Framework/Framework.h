@@ -18,6 +18,10 @@
 
 using namespace std;
 
+//DirectXTex
+#include <DirectXTex/DirectXTex.h>
+#pragma comment(lib, "DirectXTex/DirectXTex.lib")
+
 //DirectX
 #include <d3dcompiler.h>
 #include <d3d11.h>
