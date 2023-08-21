@@ -102,3 +102,5 @@ enum Pivot
 };
 
 #include "Utilities/BoundingBox.h"
+#include "Utilities/String.h"
+#include "Utilities/Path.h"
