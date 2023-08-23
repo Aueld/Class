@@ -16,7 +16,6 @@ struct TextureDesc
 
 		return b;
 	}
-
 };
 
 class Texture2D
