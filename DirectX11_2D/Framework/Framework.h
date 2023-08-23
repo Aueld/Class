@@ -84,6 +84,7 @@ extern HWND handle;
 #include "Renders/Resources/VertexType.h"
 #include "Renders/Resources/ShaderBuffer.h"
 #include "Renders/Resources/GlobalBuffer.h"
+#include "Renders/Resources/Texture2D.h"
 
 #include "Renders/IA/VertexBuffer.h"
 #include "Renders/IA/IndexBuffer.h"
