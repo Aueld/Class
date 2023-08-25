@@ -2,7 +2,6 @@
 #include "Window.h"
 #include "Graphics.h"
 
-
 //상대경로 : ./ 현재폴더, ../ 상위폴더
 //절대경로 : 
 
@@ -64,7 +63,7 @@ Window::Window(DXDesc desc)
 	SetForegroundWindow(desc.handle);
 	SetFocus(desc.handle);
 
-	ShowCursor(true);  // 게임 내부에서 마우스 커서 유출 유무
+	ShowCursor(true);//
 	Window::desc = desc;
 
 	::instance = desc.instance;
@@ -87,6 +86,7 @@ WPARAM Window::Run(IObject* mainObj)
 	Mouse::Create();
 	Time::Create();
 	Gui::Create();
+	States::Create();
 
 	this->mainObj->Init();
 
@@ -137,13 +137,12 @@ LRESULT Window::WndProc(HWND handle, UINT message, WPARAM wParam, LPARAM lParam)
 	return DefWindowProc(handle, message, wParam, lParam);
 }
 
-// MAIN
 void Window::MainRender()
 {
 	if (ImGui::GetIO().WantCaptureMouse == false)
 	{
-		Mouse::Get()->Update();
-		Keyboard::Get()->Update();
+	Mouse::Get()->Update();
+	Keyboard::Get()->Update();
 	}
 	Time::Get()->Update();
 	Gui::Get()->Update();
@@ -153,7 +152,7 @@ void Window::MainRender()
 	Graphics::Get()->Begin();
 	{
 		mainObj->Render();
-		mainObj->PostRender();		// UI 등 렌더링
+		mainObj->PostRender();
 
 		mainObj->GUI();
 		Gui::Get()->Render();
