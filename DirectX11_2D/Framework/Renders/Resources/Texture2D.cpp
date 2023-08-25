@@ -84,7 +84,7 @@ void Textures::Delete()
         SAFE_DELETE(desc.srv);
 }
 
-// 이미지 파일로부터 텍스처 데이터와 셰이더 리소스 뷰를 가지게 됨
+// 이미지 파일로부터 텍스처 데이터와 셰이더 리소스 뷰를 가지게 된다
 ID3D11ShaderResourceView* Textures::Load(Texture2D* texture)
 {
     HRESULT hr;
