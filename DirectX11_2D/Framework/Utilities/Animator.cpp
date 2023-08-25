@@ -2,6 +2,7 @@
 #include "Animator.h"
 
 AnimationClip::AnimationClip(wstring clipName, Texture2D* srcTex, UINT frameCount, Vector2 startPos, Vector2 endPos, float playRate, bool bResversed)
+    : clipName(clipName), frameCount(frameCount), playRate(playRate), bReversed(bResversed)
 {
     srv = srcTex->GetSRV();
 
@@ -12,14 +13,14 @@ AnimationClip::AnimationClip(wstring clipName, Texture2D* srcTex, UINT frameCoun
 
     Vector2 frameSize;
     frameSize.x = clipSize.x / frameCount;
-    frameSize.y = clipSize.y / frameCount;
+    frameSize.y = clipSize.y;
 
     texelFrameSize.x = frameSize.x / imageWidth;
     texelFrameSize.y = frameSize.y / imageHeight;
 
     Vector2 texelStartPos;
     texelStartPos.x = startPos.x / imageWidth;
-    texelStartPos.y = startPos.y / imageWidth;
+    texelStartPos.y = startPos.y / imageHeight;
 
     Vector2 keyframe;
 
