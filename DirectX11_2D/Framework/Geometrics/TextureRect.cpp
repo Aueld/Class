@@ -2,7 +2,7 @@
 #include "TextureRect.h"
 
 TextureRect::TextureRect(Vector3 position, Vector3 size, float rotation, wstring path, Pivot pivot)
-	: position(position), size(size), rotation(rotation), pivot(pivot)
+    : position(position), size(size), rotation(rotation), pivot(pivot)
 {
     SetVertices();
 
@@ -17,35 +17,31 @@ TextureRect::TextureRect(Vector3 position, Vector3 size, float rotation, wstring
     //    vertices[2].uv = Vector2(1, 0.5);
     //    vertices[3].uv = Vector2(0.5, 1);
     //}
-
+    
     // 정점 버퍼
     vb = new VertexBuffer();
     vb->Create(vertices, D3D11_USAGE_DYNAMIC);
-    
+
     // 인덱스 버퍼
     indices = { 0,1,2,0,3,1 };
-    //indices = { 0,1,2,0,2,3 };
-
-    ib = new IndexBuffer();
+    ib = new IndexBuffer;
     ib->Create(indices, D3D11_USAGE_IMMUTABLE);
 
     // 정점 셰이더
-    vs = new VertexShader();
+    vs = new VertexShader;
     vs->Create(ShaderPath + L"VertexTexture.hlsl", "VS");
 
     // 픽셀 셰이더
-    ps = new PixelShader();
+    ps = new PixelShader;
     ps->Create(ShaderPath + L"VertexTexture.hlsl", "PS");
 
-    // 입력배치
-    il = new InputLayout();
+    // 입력 배치
+    il = new InputLayout;
     il->Create(VertexTexture::descs, VertexTexture::count, vs->GetBlob());
 
-
     // 월드 버퍼
-    wb = new WorldBuffer();
+    wb = new WorldBuffer;
 
-    
     // SRV, 텍스처
     HRESULT hr = D3DX11CreateShaderResourceViewFromFile
     (
@@ -64,37 +60,30 @@ TextureRect::TextureRect(Vector3 position, Vector3 size, float rotation)
 {
     SetVertices();
 
-    // 정점 버퍼
     vb = new VertexBuffer();
     vb->Create(vertices, D3D11_USAGE_DYNAMIC);
 
-    // 인덱스 버퍼
     indices = { 0,1,2,0,3,1 };
-
-    ib = new IndexBuffer();
+    ib = new IndexBuffer;
     ib->Create(indices, D3D11_USAGE_IMMUTABLE);
 
-    // 정점 셰이더
-    vs = new VertexShader();
+    vs = new VertexShader;
     vs->Create(ShaderPath + L"VertexTexture.hlsl", "VS");
 
-    // 픽셀 셰이더
-    ps = new PixelShader();
+    ps = new PixelShader;
     ps->Create(ShaderPath + L"VertexTexture.hlsl", "PS");
 
-    // 입력배치
-    il = new InputLayout();
+    il = new InputLayout;
     il->Create(VertexTexture::descs, VertexTexture::count, vs->GetBlob());
 
-    // 월드 버퍼
-    wb = new WorldBuffer();
+    wb = new WorldBuffer;
 }
 
 TextureRect::~TextureRect()
 {
     SAFE_DELETE(wb);
-    SAFE_DELETE(ps);
     SAFE_DELETE(il);
+    SAFE_DELETE(ps);
     SAFE_DELETE(vs);
     SAFE_DELETE(ib);
     SAFE_DELETE(vb);
@@ -103,6 +92,7 @@ TextureRect::~TextureRect()
 void TextureRect::Update()
 {
     UpdateWorld();
+    Move();
 }
 
 void TextureRect::UpdateWorld()
@@ -111,38 +101,31 @@ void TextureRect::UpdateWorld()
     D3DXMatrixScaling(&S, size.x, size.y, size.z);
     // Rotation
     D3DXMatrixRotationZ(&R, rotation);
-    // Translation (position)
+    // Translation
     D3DXMatrixTranslation(&T, position.x, position.y, position.z);
-    
-    // 월드 버퍼
+
     world = S * R * T;
     wb->SetWorld(world);
 }
 
 void TextureRect::Render()
 {
-    // IA
     vb->SetIA();
     ib->SetIA();
     il->SetIA();
     DC->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-    // VS
     vs->SetShader();
-    
-    // PS
     ps->SetShader();
     wb->SetVSBuffer(0);
 
     DC->PSSetShaderResources(0, 1, &srv);
 
-    // OM
     DC->DrawIndexed(ib->GetCount(), 0, 0);
 }
 
 void TextureRect::GUI()
 {
-
 }
 
 void TextureRect::SetShader(wstring shaderPath)
@@ -153,42 +136,58 @@ void TextureRect::SetShader(wstring shaderPath)
     ps->Create(ShaderPath + shaderPath, "PS");
 }
 
+void TextureRect::MapVertexBuffer()
+{
+    DC->Map(vb->GetResource(), 0, D3D11_MAP_WRITE_DISCARD, 0, &subResource);
+}
+
+void TextureRect::UnmapVertexBuffer()
+{
+    memcpy(subResource.pData, vertices.data(), sizeof(vertices[0]) * vertices.size());
+    DC->Unmap(vb->GetResource(), 0);
+}
+
+void TextureRect::Move()
+{
+
+}
+
 void TextureRect::SetVertices()
 {
     vertices.assign(4, VertexTexture());
 
     switch (pivot)
     {
-    case CENTER:
-        vertices[0].position = Vector3(-0.5f, -0.5f, 0.0f);
-        vertices[1].position = Vector3(+0.5f, +0.5f, 0.0f);
-        vertices[2].position = Vector3(+0.5f, -0.5f, 0.0f);
-        vertices[3].position = Vector3(-0.5f, +0.5f, 0.0f);
-        break;
-    case LEFT:
-        vertices[0].position = Vector3(+0.0f, -0.5f, 0.0f);
-        vertices[1].position = Vector3(+1.0f, +0.5f, 0.0f);
-        vertices[2].position = Vector3(+1.0f, -0.5f, 0.0f);
-        vertices[3].position = Vector3(+0.0f, +0.5f, 0.0f);
-        break;
-    case RIGHT:
-        vertices[0].position = Vector3(-1.0f, -0.5f, 0.0f);
-        vertices[1].position = Vector3(+0.0f, +0.5f, 0.0f);
-        vertices[2].position = Vector3(+0.0f, -0.5f, 0.0f);
-        vertices[3].position = Vector3(-1.0f, +0.5f, 0.0f);
-        break;
-    case UP:
-        vertices[0].position = Vector3(-0.5f, -1.0f, 0.0f);
-        vertices[1].position = Vector3(+0.5f, +0.0f, 0.0f);
-        vertices[2].position = Vector3(+0.5f, -1.0f, 0.0f);
-        vertices[3].position = Vector3(-0.5f, +0.0f, 0.0f);
-        break;
-    case DOWN:
-        vertices[0].position = Vector3(-0.5f, +0.0f, 0.0f);
-        vertices[1].position = Vector3(+0.5f, +1.0f, 0.0f);
-        vertices[2].position = Vector3(+0.5f, +0.0f, 0.0f);
-        vertices[3].position = Vector3(-0.5f, +1.0f, 0.0f);
-        break;
+        case CENTER:
+            vertices[0].position = Vector3(-0.5f, -0.5f, 0.0f);
+            vertices[1].position = Vector3(+0.5f, +0.5f, 0.0f);
+            vertices[2].position = Vector3(+0.5f, -0.5f, 0.0f);
+            vertices[3].position = Vector3(-0.5f, +0.5f, 0.0f);
+            break;
+        case LEFT:
+            vertices[0].position = Vector3(-0.0f, -0.5f, 0.0f);
+            vertices[1].position = Vector3(+1.0f, +0.5f, 0.0f);
+            vertices[2].position = Vector3(+1.0f, -0.5f, 0.0f);
+            vertices[3].position = Vector3(-0.0f, +0.5f, 0.0f);
+            break;
+        case RIGHT:
+            vertices[0].position = Vector3(-1.0f, -0.5f, 0.0f);
+            vertices[1].position = Vector3(+0.0f, +0.5f, 0.0f);
+            vertices[2].position = Vector3(+0.0f, -0.5f, 0.0f);
+            vertices[3].position = Vector3(-1.0f, +0.5f, 0.0f);
+            break;
+        case UP:
+            vertices[0].position = Vector3(-0.5f, -1.0f, 0.0f);
+            vertices[1].position = Vector3(+0.5f, +0.0f, 0.0f);
+            vertices[2].position = Vector3(+0.5f, -1.0f, 0.0f);
+            vertices[3].position = Vector3(-0.5f, +0.0f, 0.0f);
+            break;
+        case DOWN:
+            vertices[0].position = Vector3(-0.5f, -0.0f, 0.0f);
+            vertices[1].position = Vector3(+0.5f, +1.0f, 0.0f);
+            vertices[2].position = Vector3(+0.5f, -0.0f, 0.0f);
+            vertices[3].position = Vector3(-0.5f, +1.0f, 0.0f);
+            break;
     }
 
     vertices[0].uv = Vector2(0, 1);
