@@ -71,5 +71,26 @@ void AnimationRect::Render()
 
 void AnimationRect::Move()
 {
+    //auto* keyboard = Keyboard::Get();
+    //float delta = Time::Delta();
 
+    //if (keyboard->Press('W'))
+    //{
+    //    position.y += 100 * delta;
+    //}
+    //if (keyboard->Press('S'))
+    //{
+    //    position.y -= 100 * delta;
+
+    //}
+    //if (keyboard->Press('A'))
+    //{
+    //    position.x -= 100 * delta;
+    //    animator->SetCurrentAnimClip(L"Run_L");
+    //}
+    //if (keyboard->Press('D'))
+    //{
+    //    position.x += 100 * delta;
+    //    animator->SetCurrentAnimClip(L"Run_R");
+    //}
 }
