@@ -10,6 +10,7 @@ public:
     virtual void GUI() override;
 
 private:
-    class AnimationRect* ar = nullptr;
+    //class AnimationRect* ar = nullptr;
+    class Player* player = nullptr;
 };
 
