@@ -7,36 +7,14 @@ AnimationRect::AnimationRect(Vector3 position, Vector3 size)
     // 추 후 작업시 hlsl 파일 새로 만들어 사용 할 것
     //SetShader(ShaderPath + L"Animation.hlsl");
 
-    animator = new Animator;
-
-    Texture2D* srcTex = new Texture2D(CharacterPath + L"player.png");
-    AnimationClip* Run_R = new AnimationClip
-    (
-        L"Run_R", srcTex, 10,
-        Values::ZeroVec2,
-        Vector2(srcTex->GetWidth(), srcTex->GetHeight() * 0.5f),
-        1.0f / 15.0f
-    );
-    AnimationClip* Run_L = new AnimationClip
-    (
-        L"Run_L", srcTex, 10,
-        Vector2(0.0f, srcTex->GetHeight() * 0.5f),
-        Vector2(srcTex->GetWidth(), srcTex->GetHeight()),
-        1.0f / 15.0f, true
-    );
-
-    animator->AddAnimClip(Run_R);
-    animator->AddAnimClip(Run_L);
-    animator->SetCurrentAnimClip(L"Run_R");
-
-    SAFE_DELETE(srcTex);
-
     // Sampler
     {
         D3D11_SAMPLER_DESC desc;
+        // 선형 샘플링
         States::GetSamplerDesc(&desc);
         States::CreateSampler(&desc, &point[0]);
 
+        // 점형 샘플링
         desc.Filter = D3D11_FILTER_MIN_MAG_MIP_POINT;
         States::CreateSampler(&desc, &point[1]);
     }
@@ -50,7 +28,6 @@ AnimationRect::AnimationRect(Vector3 position, Vector3 size)
         desc.RenderTarget[0].BlendEnable = true;
         States::CreateBlend(&desc, &bPoint[1]);
     }
-
 }
 
 AnimationRect::~AnimationRect()
@@ -85,6 +62,7 @@ void AnimationRect::Render()
 {
     srv = animator->GetCurrentSRV();
 
+    // 샘플링 및 블렌딩
     DC->PSSetSamplers(0, 1, &point[1]);
     DC->OMSetBlendState(bPoint[1], nullptr, (UINT)0xFFFFFFFF);
 
@@ -93,26 +71,5 @@ void AnimationRect::Render()
 
 void AnimationRect::Move()
 {
-    auto* keyboard = Keyboard::Get();
-    float delta = Time::Delta();
 
-    if (keyboard->Press('W'))
-    {
-        position.y += 100 * delta;
-    }
-    if (keyboard->Press('S'))
-    {
-        position.y -= 100 * delta;
-
-    }
-    if (keyboard->Press('A'))
-    {
-        position.x -= 100 * delta;
-        animator->SetCurrentAnimClip(L"Run_L");
-    }
-    if (keyboard->Press('D'))
-    {
-        position.x += 100 * delta;
-        animator->SetCurrentAnimClip(L"Run_R");
-    }
 }
