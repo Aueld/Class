@@ -87,6 +87,7 @@ WPARAM Window::Run(IObject* mainObj)
 	Time::Create();
 	Gui::Create();
 	States::Create();
+	Sounds::Create();
 
 	this->mainObj->Init();
 
@@ -106,10 +107,11 @@ WPARAM Window::Run(IObject* mainObj)
 		{
 			MainRender();
 		}
-		
+
 	}
 	this->mainObj->Destroy();
 
+	Sounds::Delete();
 	Gui::Delete();
 	Time::Delete();
 	Mouse::Delete();
@@ -141,11 +143,12 @@ void Window::MainRender()
 {
 	if (ImGui::GetIO().WantCaptureMouse == false)
 	{
-	Mouse::Get()->Update();
-	Keyboard::Get()->Update();
+		Mouse::Get()->Update();
+		Keyboard::Get()->Update();
 	}
 	Time::Get()->Update();
 	Gui::Get()->Update();
+	Sounds::Get()->Update();
 
 	mainObj->Update();
 
