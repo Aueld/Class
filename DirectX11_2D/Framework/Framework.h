@@ -13,6 +13,7 @@
 #include <stdlib.h>
 #include <Windows.h>
 #include <string>
+#include <map>
 #include <unordered_map>
 #include <assert.h>
 
@@ -43,6 +44,13 @@ using namespace std;
 #pragma comment(lib, "ImGui/ImGui.lib")
 
 //////////////////////////////////////////
+//FMOD
+#include "../_Libraries/FMOD/inc/fmod.hpp"
+#ifdef _WIN64
+#pragma comment(lib, "../_Libraries/FMOD/lib/x64/fmod_vc.lib");
+#else
+#pragma comment(lib, "../_Libraries/FMOD/lib/x86/fmod_vc.lib");
+#endif
 
 #include "Interfaces/IObject.h"
 
@@ -52,6 +60,7 @@ using namespace std;
 #include "Systems/Keyboard.h"
 #include "Systems/Mouse.h"
 #include "Systems/Time.h"
+#include "Systems/Sounds.h"
 
 #include "Utilities/Gui.h"
 
@@ -76,6 +85,8 @@ typedef UINT		uint;
 
 const wstring ShaderPath = L"../_Shaders/";
 const wstring TexturePath = L"../_Resources/Textures/";
+const wstring CharacterPath = L"../_Resources/Character/";
+const wstring SoundPath = L"_Resources/Sounds/";
 
 extern HWND handle;
 
