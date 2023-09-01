@@ -11,9 +11,10 @@ class Program : public IObject
 
 private:
 	void Push(IObject* obj);
-
-	VPBuffer* vpb = nullptr;
-	Matrix view, proj;
+	
+	// 카메라 분리
+	//VPBuffer* vpb = nullptr;
+	//Matrix view, proj;
 
 	vector<IObject*> objs;
 };
