@@ -6,45 +6,52 @@
 #include "Demos/01_RectDemo.h"
 #include "Demos/02_TextureDemo.h"
 #include "Demos/03_ShadedDemo.h"
-#include "Demos/04_BlurDemo.h"
+#include "Demos/04_RTVDemo.h"
+#include "Demos/05_CollisionDemo.h"
+#include "Demos/06_AnimationDemo.h"
+
+#include "Demos/10_PlatDemo.h"
 
 void Program::Init()
 {
-	{
-		vpb = new VPBuffer();
+	Camera::Create();
 
-		D3DXMatrixLookAtLH
-		(
-			&view,
-			&Vector3(0, 0, 0),
-			&Vector3(0, 0, 1),
-			&Vector3(0, 1, 0)
-		);
-
-		D3DXMatrixOrthoOffCenterLH
-		(
-			&proj,
-			0.0f,
-			(float)WinMaxWidth,
-			0.0f,
-			(float)WinMaxHeight,
-			0,
-			1
-		);
-
-		vpb->SetView(view);
-		vpb->SetProjection(proj);
-	}
+	//{
+	//	vpb = new VPBuffer();
+	//	D3DXMatrixLookAtLH
+	//	(
+	//		&view,
+	//		&Vector3(0, 0, 0),
+	//		&Vector3(0, 0, 1),
+	//		&Vector3(0, 1, 0)
+	//	);
+	//	D3DXMatrixOrthoOffCenterLH
+	//	(
+	//		&proj,
+	//		0.0f,
+	//		(float)WinMaxWidth,
+	//		0.0f,
+	//		(float)WinMaxHeight,
+	//		0,
+	//		1
+	//	);
+	//	vpb->SetView(view);
+	//	vpb->SetProjection(proj);
+	//}
 
 	//Push(new RectDemo);
-	Push(new TextureDemo);
+	//Push(new TextureDemo);
 	//Push(new ShadedDemo);
-	//Push(new BlurDemo);
+	//Push(new RTVDemo);
+	//Push(new CollisionDemo);
+	//Push(new PlatDemo);
+	Push(new AnimationDemo);
 }
 
 void Program::Destroy()
 {
-	SAFE_DELETE(vpb);
+	Camera::Delete();
+	//SAFE_DELETE(vpb);
 	for (IObject* obj : objs)
 	{
 		obj->Destroy();
@@ -56,14 +63,19 @@ void Program::Update()
 {
 	for (IObject* obj : objs)
 		obj->Update();
+
+	Camera::Get()->Move();
 }
 
 void Program::Render()
 {
-	vpb->SetVSBuffer(1);
+	//vpb->SetVSBuffer(1);
 
 	for (IObject* obj : objs)
 		obj->Render();
+
+	Camera::Get()->UpdateView();
+	Camera::Get()->Render();
 }
 
 void Program::PostRender()
